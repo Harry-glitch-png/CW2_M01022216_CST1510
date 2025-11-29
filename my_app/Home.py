@@ -3,6 +3,8 @@ from app.services.user_service import register_user, login_user
 
 st.set_page_config(page_title="Login / Register", page_icon="🔑 ", layout="centered")
 
+# st.write("DEBUG:", st.session_state)
+
 # ---------- Initialise session state ----------
 if "users" not in st.session_state:
     # Very simple in-memory "database": {username: password}
@@ -13,6 +15,12 @@ if "logged_in" not in st.session_state:
 
 if "username" not in st.session_state:
     st.session_state.username = ""
+
+# Allow category selections in 1_Dashboard
+categories = ["NONE", "Cybersecurity", "Data Science", "IT Operations"]
+
+if "selected_categories" not in st.session_state:
+    st.session_state.selected_categories = "NONE"
 
 st.title("🔐 Welcome")
 

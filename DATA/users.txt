@@ -1,2 +1,0 @@
-alice $2b$10$oHCHhzCutxgS1Gtl6t5/pOsjkV2jFd9CRW.aMwNiLCiMpPOmcqFMa
-Alice $2b$10$8jkYgvzjXuuM6CbkJv/1VeZb2Fi7lo86NhsAea4dtx06MN4dQu.n2

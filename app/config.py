@@ -2,7 +2,7 @@ from pathlib import Path
 
 # Define paths
 BASE_DIR = Path(__file__).resolve().parent.parent  # Root of project
-DATA_DIR = BASE_DIR / "DATA"
+DATA_DIR = BASE_DIR / "app" / "data" /"DATA"
 DB_PATH = DATA_DIR / "intelligence_platform.db"
 
 # Ensure DATA folder exists

@@ -1,5 +1,5 @@
 import pandas as pd
-from app.data.db import connect_database
+from app.data.db import *
 from app.data.schema import create_all_tables
 
 conn = connect_database()
@@ -75,7 +75,6 @@ def delete_incident(conn, incident_id):
     """
     Delete an incident from the database.
 
-    TODO: Implement DELETE operation.
     """
 
     cursor = conn.cursor()

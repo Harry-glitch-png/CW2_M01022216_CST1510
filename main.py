@@ -1,14 +1,10 @@
-from app.data.db import connect_database
+from app.data.db import *
 from app.data.schema import create_all_tables
-
+from app.services.user_service import *
 from app.data.incidents import *
 import pandas as pd
 from pathlib import Path
 from app.data.users import *
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-DB_PATH = Path("DATA") / "intelligence_platform.db"
-DATA_DIR = BASE_DIR / "DATA"
 
 def main():
 
