@@ -1,5 +1,11 @@
 import streamlit as st
 from app.services.user_service import register_user, login_user
+from services.database_manager import DatabaseManager
+from services.auth_manager import AuthManager
+
+# Instantiate AuthManager with your DatabaseManager
+db = DatabaseManager("app/data/DATA/intelligence_platform.db")
+auth = AuthManager(db)
 
 st.set_page_config(page_title="Login / Register", page_icon="🔑 ", layout="centered")
 
@@ -43,7 +49,7 @@ with tab_login:
     login_password = st.text_input("Password", type="password")
 
     if st.button("Log in", type="primary"):
-        success, msg = login_user(login_username, login_password)
+        success, msg = auth.login_user(login_username, login_password)
         if success:
             st.session_state.logged_in = True
             st.session_state.username = login_username
@@ -67,7 +73,7 @@ with tab_register:
         elif new_password != confirm_password:
             st.error("Passwords do not match.")
         else:
-            success, msg = register_user(new_username, new_password)
+            success, msg = auth.register_user(new_username, new_password)
             if success:
                 st.success(msg)
                 st.info("Tip: go to the Login tab and sign in with your new account.")

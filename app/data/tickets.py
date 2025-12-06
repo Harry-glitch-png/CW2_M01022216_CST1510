@@ -80,7 +80,7 @@ def delete_ticket(conn, ticket_id):
     # Parameterized DELETE query
     delete_sql = """
     DELETE FROM it_tickets
-    WHERE it_tickets = ?
+    WHERE tickets_id = ?
     """
 
     cursor.execute(delete_sql, (ticket_id,))
