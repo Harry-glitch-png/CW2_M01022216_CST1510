@@ -28,7 +28,7 @@ class AIAssistant:
         ]
         # API config
         response_stream = self._client.models.generate_content_stream(
-            model="gemini-3-pro-preview",
+            model="gemini-2.5-flash",
             config=types.GenerateContentConfig(
                 system_instruction=f"You are an {category} data analyst. Your name is Gem."
             ),
