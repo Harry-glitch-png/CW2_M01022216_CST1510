@@ -3,6 +3,7 @@ from app.data.db import connect_database
 
 conn = connect_database()
 
+# Inset ticket
 def insert_ticket(conn, priority, description, status, assigned_to, created_at, resolution_time_hours, reported_by=None):
     """
     Insert a new IT ticket into the database.
@@ -29,13 +30,14 @@ def insert_ticket(conn, priority, description, status, assigned_to, created_at, 
             VALUES (?, ?, ?, ?, ?, ?, ?)
             """
 
-    cursor.execute(insert_sql, (priority, description, status, assigned_to, created_at, resolution_time_hours, reported_by))
-    conn.commit()
+    cursor.execute(insert_sql, (priority, description, status, assigned_to, created_at, resolution_time_hours, reported_by))# Execute the SQL statement
+    conn.commit() # Save inserted data
 
-    incident_id = cursor.lastrowid
-    return incident_id
+    # Return ticket id
+    ticket_id = cursor.lastrowid
+    return ticket_id
 
-
+# Get all tickets
 def get_all_tickets(conn):
     """
     Retrieve all tickets from the database.
@@ -48,7 +50,7 @@ def get_all_tickets(conn):
     df = pd.read_sql_query("SELECT * FROM it_tickets", conn)
     return df
 
-
+# Update ticket status
 def update_ticket_status(conn, ticket_id, new_status):
     """
     Update the status of a ticket.
@@ -63,13 +65,14 @@ def update_ticket_status(conn, ticket_id, new_status):
     WHERE incident_id = ?
     """
 
-    cursor.execute(update_sql, (new_status, ticket_id))
-    conn.commit()
+    cursor.execute(update_sql, (new_status, ticket_id))# Execute the SQL statement
+    conn.commit() # Save inserted data
 
+    # Varify status update
     print(f"✅ Ticket {ticket_id} status updated to '{new_status}'.")
     return cursor.rowcount  # Number of rows affected
 
-
+# Delete ticket
 def delete_ticket(conn, ticket_id):
     """
     Delete a ticket from the database.
@@ -83,13 +86,14 @@ def delete_ticket(conn, ticket_id):
     WHERE tickets_id = ?
     """
 
-    cursor.execute(delete_sql, (ticket_id,))
-    conn.commit()
+    cursor.execute(delete_sql, (ticket_id,))# Execute the SQL statement
+    conn.commit() # Save inserted data
 
+    # Varify that the ticket is deleted
     print(f"✅ Ticket {ticket_id} deleted successfully.")
     return cursor.rowcount  # Number of rows affected
 
-
+# Get ticket by priority count
 def get_ticket_by_priority_count(conn):
     """
     Count tickets by type.
@@ -104,7 +108,7 @@ def get_ticket_by_priority_count(conn):
     df = pd.read_sql_query(query, conn)
     return df
 
-
+# Get high priority by status
 def get_high_priority_by_status(conn):
     """
     Count open tickets by status.
@@ -120,7 +124,7 @@ def get_high_priority_by_status(conn):
     df = pd.read_sql_query(query, conn)
     return df
 
-
+# Get ticket types with many cases
 def get_ticket_types_with_many_cases(conn, min_count=5):
     """
     Find incident types with more than min_count cases.

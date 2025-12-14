@@ -8,7 +8,7 @@ import sqlite3
 from app.config import DATA_DIR, DB_PATH
 from app.data.auth import *
 
-
+# Register user
 def register_user(username, password, role="user"):
     """
     Register a new user in the database.
@@ -39,22 +39,17 @@ def register_user(username, password, role="user"):
     else:
         return success, msg
 
-    # password_bytes = password.encode('utf-8')
-    # salt = bcrypt.gensalt()
-    # hashed = bcrypt.hashpw(password_bytes, salt)
-    # password_hash = hashed.decode('utf-8')
-
     # Insert new user
     cursor.execute(
         "INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)",
         (username, password_hash, role)
     )
-    conn.commit()
+    conn.commit() # Save inserted data
     conn.close()
 
     return True, f"User '{username}' registered successfully!"
 
-
+# Login user
 def login_user(username, password):
     """
     Authenticate a user against the database.
@@ -89,7 +84,7 @@ def login_user(username, password):
     else:
         return False, "Invalid password."
 
-
+# Migrate users from file
 def migrate_users_from_file(conn, filepath=DATA_DIR / "users.txt"):
     """
     Migrate users from users.txt to the database.
@@ -100,6 +95,7 @@ def migrate_users_from_file(conn, filepath=DATA_DIR / "users.txt"):
         conn: Database connection
         filepath: Path to users.txt file
     """
+    # Checks the file path
     if not filepath.exists():
         print(f"⚠️  File not found: {filepath}")
         print("   No users to migrate.")
@@ -108,6 +104,7 @@ def migrate_users_from_file(conn, filepath=DATA_DIR / "users.txt"):
     cursor = conn.cursor()
     migrated_count = 0
 
+    # Gathers the data from the text file
     with open(filepath, 'r') as f:
         for line in f:
             line = line.strip()
@@ -131,10 +128,11 @@ def migrate_users_from_file(conn, filepath=DATA_DIR / "users.txt"):
                 except sqlite3.Error as e:
                     print(f"Error migrating user {username}: {e}")
 
-    conn.commit()
+    conn.commit() # Save inserted data
+    # Varify that the data is migrated
     print(f"✅ Migrated {migrated_count} users from {filepath.name}")
 
-
+# Load CSV to table
 def load_csv_to_table(conn, csv_path, table_name):
     """
     Load a CSV file into a database table using pandas.
@@ -148,6 +146,7 @@ def load_csv_to_table(conn, csv_path, table_name):
     Returns:
         int: Number of rows loaded
     """
+    # Checks the path
     csv_path = Path(csv_path)
     if not csv_path.exists():
         print(f"⚠️  File not found: {csv_path}")

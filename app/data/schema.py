@@ -1,23 +1,10 @@
 import sqlite3
-# from app.config import DATA_DIR, DB_PATH
 from pathlib import Path
 from app.data.db import *
 
-# def ensure_data_dir():
-#     """Ensure the DATA directory exists."""
-#     DATA_DIR.mkdir(parents=True, exist_ok=True)
-#
-#
-# def connect_database(db_path=DB_PATH):
-#     """
-#     Connect to the SQLite database.
-#     Creates the database file if it doesn't exist.
-#     """
-#     ensure_data_dir()
-#     return sqlite3.connect(str(db_path))
-
-
+# Create users table
 def create_users_table(conn):
+    """Create users table in database."""
     cursor = conn.cursor()
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS users (
@@ -28,11 +15,12 @@ def create_users_table(conn):
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """)
-    conn.commit()
-    print("✅ Users table created successfully!")
+    conn.commit() # Save inserted data
+    print("✅ Users table created successfully!") # Varify that the table was created
 
-
+# Create cyber incidents table
 def create_cyber_incidents_table(conn):
+    """Create cyber_incidents table in database."""
     cursor = conn.cursor()
     try:
         # cursor.execute("""DROP TABLE IF EXISTS cyber_incidents""")
@@ -47,14 +35,16 @@ def create_cyber_incidents_table(conn):
             reported_by TEXT
         )
         """)
-        conn.commit()
+        conn.commit() # Save inserted data
+        # Varify if the table was created
         print("✅ Cyber incidents table created successfully!")
     except Exception as e:
         print("Failed to create cyber_incidents table:", e)
         raise
 
-
+# Create datasets metadata table
 def create_datasets_metadata_table(conn):
+    """Create datasets_metadata table in database."""
     cursor = conn.cursor()
     try:
         cursor.execute("""DROP TABLE IF EXISTS datasets_metadata""")
@@ -69,14 +59,16 @@ def create_datasets_metadata_table(conn):
             reported_by TEXT
         )
         """)
-        conn.commit()
+        conn.commit() # Save inserted data
+        # Varify if the table was created
         print("✅ Datasets metadata table created successfully!")
     except Exception as e:
         print("Failed to create Datasets metadata table:", e)
         raise
 
-
+# Create IT tickets table
 def create_it_tickets_table(conn):
+    """Create it_tickets table in database."""
     cursor = conn.cursor()
     try:
         # cursor.execute("""DROP TABLE IF EXISTS it_tickets""")
@@ -92,13 +84,14 @@ def create_it_tickets_table(conn):
             reported_by TEXT  
         )
         """)
-        conn.commit()
+        conn.commit() # Save inserted data
+        # Varify if the table was created
         print("✅ IT tickets table created successfully!")
     except Exception as e:
         print("Failed to create It tickets table:", e)
         raise
 
-
+# Create all tables
 def create_all_tables(conn):
     """Create all tables."""
     try:
@@ -109,7 +102,6 @@ def create_all_tables(conn):
     except Exception as e:
         print("Table creation failed:", e)
         raise
-
 
 if __name__ == "__main__":
     print("🔍 Initializing database...")

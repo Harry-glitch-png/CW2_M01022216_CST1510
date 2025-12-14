@@ -1,5 +1,6 @@
 from app.data.db import connect_database
 
+# Get user by username
 def get_user_by_username(username):
     """Retrieve user by username."""
     conn = connect_database()
@@ -12,6 +13,7 @@ def get_user_by_username(username):
     conn.close()
     return user
 
+# Insert user
 def insert_user(username, password_hash, role='user'):
     """Insert new user."""
     conn = connect_database()
@@ -20,5 +22,5 @@ def insert_user(username, password_hash, role='user'):
         "INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)",
         (username, password_hash, role)
     )
-    conn.commit()
+    conn.commit() # Save inserted data
     conn.close()

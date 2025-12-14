@@ -1,5 +1,4 @@
 import streamlit as st
-from app.services.user_service import register_user, login_user
 from services.database_manager import DatabaseManager
 from services.auth_manager import AuthManager
 
@@ -9,7 +8,6 @@ auth = AuthManager(db)
 
 st.set_page_config(page_title="Login / Register", page_icon="🔑 ", layout="centered")
 
-# st.write("DEBUG:", st.session_state)
 
 # ---------- Initialise session state ----------
 if "users" not in st.session_state:
@@ -45,10 +43,12 @@ tab_login, tab_register = st.tabs(["Login", "Register"])
 # ----- LOGIN TAB -----
 with tab_login:
     st.subheader("Login")
+    # User enters their information
     login_username = st.text_input("Username")
     login_password = st.text_input("Password", type="password")
 
     if st.button("Log in", type="primary"):
+        # Logs the user into the platform
         success, msg = auth.login_user(login_username, login_password)
         if success:
             st.session_state.logged_in = True
@@ -63,16 +63,20 @@ with tab_login:
 # ----- REGISTER TAB -----
 with tab_register:
     st.subheader("Register")
+    # User enters their information
     new_username = st.text_input("Choose a username")
     new_password = st.text_input("Choose a password", type="password")
     confirm_password = st.text_input("Confirm password", type="password")
 
     if st.button("Create account"):
+        # Makes sure the user enters all fields
         if not new_username or not new_password:
             st.warning("Please fill in all fields.")
+        # Checks if the password match
         elif new_password != confirm_password:
             st.error("Passwords do not match.")
         else:
+            # Creates account in database
             success, msg = auth.register_user(new_username, new_password)
             if success:
                 st.success(msg)

@@ -8,21 +8,25 @@ class SimpleHasher:
 
     @staticmethod
     def hash_password(plain: str) -> str:
+        """Hashes the password using"""
         password_bytes = plain.encode("utf-8")
-        salt = bcrypt.gensalt(rounds=10)
+        salt = bcrypt.gensalt(rounds=10) # Uses salt for extra security
         hashed = (bcrypt.hashpw(password_bytes, salt)).decode("utf-8")
         return hashed
 
     @staticmethod
     def check_password(plain: str, hashed: str) -> bool:
-        return bcrypt.checkpw(plain.encode("utf-8"), hashed.encode("utf-8"))
+        """Checks if the password is correct"""
+        return bcrypt.checkpw(plain.encode("utf-8"), hashed.encode("utf-8")) # Compares user password against the stored hashed password
 
 class AuthManager:
     """Handles user registration and login."""
+    # Initializes the objects
     def __init__(self, db: DatabaseManager, hasher=SimpleHasher):
         self._db = db
         self._hasher = hasher
 
+    # Register user
     def register_user(self, username: str, password: str, role: str = "user") -> tuple[bool, str]:
         """Register a user in the database."""
 
@@ -52,6 +56,7 @@ class AuthManager:
 
         return True, f"User '{username}' registered successfully!"
 
+    # Login user
     def login_user(self, username: str, password: str) -> tuple[bool, str]:
         """
         Authenticate a user against the database and allows the user to login.

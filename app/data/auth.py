@@ -3,25 +3,35 @@ import re
 
 USER_DATA_FILE = "users.txt"
 
+# Hash password
 def hash_password(plain_text_password):
+    """Hashes the password and returns the hashed password."""
     password_bytes = plain_text_password.encode("utf-8")
-    salt = bcrypt.gensalt(rounds=10)
+    salt = bcrypt.gensalt(rounds=10) # Uses salt for farther protection
     hashed = (bcrypt.hashpw(password_bytes, salt)).decode("utf-8")
     return hashed
 
+# Verify password
 def verify_password(plain_text_password, hashed_password):
+    """Makes sure that the password matches the hashed password."""
     return bcrypt.checkpw(plain_text_password.encode("utf-8"), hashed_password.encode("utf-8"))
 
+# Register user
 def register_user(username, password):
+    """Registers a new user in the database."""
+    # Checks if the username has already been used
     if user_exists(username):
         return False
     else:
+        # Enters username into the text file
         with open(USER_DATA_FILE, "a") as udf:
             hashed_password = hash_password(password)
             udf.write(username + " " + hashed_password + "\n")
             return True
 
+# Check if the user exists
 def user_exists(username):
+    """Checks if a user exists in the text file."""
     with open(USER_DATA_FILE, "r") as udf:
         for line in udf:
             stored_user, _ = line.strip().split(" ")
@@ -29,7 +39,10 @@ def user_exists(username):
                 return True
     return False
 
+# Login users
 def login_user(username, password):
+    """Logs a user into the program."""
+    # Checks if the username and password is correct
     with open(USER_DATA_FILE, "r") as udf:
         for line in udf:
             stored_user, stored_hash = line.strip().split()
@@ -38,23 +51,32 @@ def login_user(username, password):
     print("Invalid username or password.")
     return False
 
+# Validate username
 def validate_username(username):
+    """Makes sure that the username fulfills the criteria."""
+    # Check the name's length
     if len(username) < 3:
         return False, "Username must be at least 3 characters long."
     if len(username) > 20:
         return False, "Username must be at most 20 characters long."
 
+    # Checks the characters used in the name
     if re.search(r" ", username):
         return False, "There can be no spaces in your username."
     elif re.search(r"[a-zA-Z]", username):
         return True, "Valid username."
     return False, "The must be alphanumeric characters in your username."
 
+# Validate password
 def validate_password(password):
+    """Makes sure that the password fulfills the criteria."""
+    # Checks if the password's length
     if len(password) < 6:
         return False, "Password must be at least 6 characters long."
     if len(password) > 50:
         return False, "Password must be at most 50 characters long."
+
+    # Checks the characters of the password
     if re.search(r" ", password):
         return False, "There can be no spaces in your password"
     elif (
@@ -66,6 +88,8 @@ def validate_password(password):
         return True, "Valid password."
     return False, "Password must contain uppercase and lowercase letters, and at less one number and special character."
 
+#______Test Code______
+# Display menu
 def display_menu():
  """Displays the main menu options."""
  print("\n" + "="*50)
@@ -77,6 +101,7 @@ def display_menu():
  print("[3] Exit")
  print("-"*50)
 
+# Main
 def main():
     """Main program loop."""
     print("\nWelcome to the Week 7 Authentication System!")

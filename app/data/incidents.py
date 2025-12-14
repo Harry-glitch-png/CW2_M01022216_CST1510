@@ -1,9 +1,9 @@
 import pandas as pd
 from app.data.db import *
-from app.data.schema import create_all_tables
 
 conn = connect_database()
 
+# Insert incident
 def insert_incident(conn, timestamp, severity, category, status, description, reported_by=None):
     """
     Insert a new cyber incident into the database.
@@ -29,13 +29,14 @@ def insert_incident(conn, timestamp, severity, category, status, description, re
             VALUES (?, ?, ?, ?, ?, ?)
             """
 
-    cursor.execute(insert_sql, (timestamp, severity, category, status, description, reported_by))
-    conn.commit()
+    cursor.execute(insert_sql, (timestamp, severity, category, status, description, reported_by))# Execute the SQL statement
+    conn.commit() # Save inserted data
 
+    # Return incident ID
     incident_id = cursor.lastrowid
     return incident_id
 
-
+# Get all incidents
 def get_all_incidents(conn):
     """
     Retrieve all incidents from the database.
@@ -48,11 +49,10 @@ def get_all_incidents(conn):
     df = pd.read_sql_query("SELECT * FROM cyber_incidents", conn)
     return df
 
-
+# Update incident status
 def update_incident_status(conn, incident_id, new_status):
     """
     Update the status of an incident.
-
     """
 
     cursor = conn.cursor()
@@ -64,17 +64,17 @@ def update_incident_status(conn, incident_id, new_status):
     WHERE incident_id = ?
     """
 
-    cursor.execute(update_sql, (new_status, incident_id))
-    conn.commit()
+    cursor.execute(update_sql, (new_status, incident_id))# Execute the SQL statement
+    conn.commit() # Save inserted data
 
+    # Varify updated status
     print(f"✅ Incident {incident_id} status updated to '{new_status}'.")
     return cursor.rowcount  # Number of rows affected
 
-
+# Delete incident
 def delete_incident(conn, incident_id):
     """
     Delete an incident from the database.
-
     """
 
     cursor = conn.cursor()
@@ -85,13 +85,14 @@ def delete_incident(conn, incident_id):
     WHERE incident_id = ?
     """
 
-    cursor.execute(delete_sql, (incident_id,))
-    conn.commit()
+    cursor.execute(delete_sql, (incident_id,))# Execute the SQL statement
+    conn.commit() # Save inserted data
 
+    # Varify that the incident is deleted
     print(f"✅ Incident {incident_id} deleted successfully.")
     return cursor.rowcount  # Number of rows affected (should be 1 if successful)
 
-
+# Get incidents by type count
 def get_incidents_by_type_count(conn):
     """
     Count incidents by type.
@@ -106,7 +107,7 @@ def get_incidents_by_type_count(conn):
     df = pd.read_sql_query(query, conn)
     return df
 
-
+# Get high severity status
 def get_high_severity_by_status(conn):
     """
     Count high severity incidents by status.
@@ -122,7 +123,7 @@ def get_high_severity_by_status(conn):
     df = pd.read_sql_query(query, conn)
     return df
 
-
+# Get incident types with many cases
 def get_incident_types_with_many_cases(conn, min_count=5):
     """
     Find incident types with more than min_count cases.
@@ -137,20 +138,3 @@ def get_incident_types_with_many_cases(conn, min_count=5):
     """
     df = pd.read_sql_query(query, conn, params=(min_count,))
     return df
-
-# # Test: Run analytical queries
-# conn = connect_database()
-#
-# print("\n Incidents by Type:")
-# df_by_type = get_incidents_by_type_count(conn)
-# print(df_by_type)
-#
-# print("\n High Severity Incidents by Status:")
-# df_high_severity = get_high_severity_by_status(conn)
-# print(df_high_severity)
-#
-# print("\n Incident Types with Many Cases (>5):")
-# df_many_cases = get_incident_types_with_many_cases(conn, min_count=5)
-# print(df_many_cases)
-#
-# conn.close()
